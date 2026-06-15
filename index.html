@@ -1,0 +1,412 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>POL 4418 — General Assembly Vote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,900&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0f1a2e; --navy-2:#16243d; --navy-line:#27374f;
+    --parchment:#f4eee1; --line:#d9cdb2; --ink:#1b2334; --ink-soft:#54607a;
+    --brass:#c0974a; --brass-deep:#946f2c;
+    --yes:#2f7d52; --no:#b23b3b; --cond:#b9842a; --obs:#39699e; --oppose:#6a5a93;
+    --gold:#c9a227; --silver:#9aa0aa; --bronze:#b07a43;
+    --shadow:0 18px 50px -18px rgba(0,0,0,.55);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--navy);
+    background-image:radial-gradient(900px 500px at 80% -10%, rgba(192,151,74,.14), transparent 60%),radial-gradient(700px 500px at -5% 110%, rgba(57,105,158,.18), transparent 60%);
+    color:var(--parchment); font-family:"Public Sans",system-ui,sans-serif; line-height:1.5; min-height:100vh}
+  .wrap{max-width:760px; margin:0 auto; padding:32px 20px 80px}
+  header{text-align:center; padding:14px 0 24px}
+  .seal{width:74px; height:74px; margin:0 auto 16px; border-radius:50%; display:grid; place-items:center; position:relative;
+    border:2px solid var(--brass); box-shadow:0 0 0 5px rgba(192,151,74,.12), inset 0 0 0 1px rgba(192,151,74,.4)}
+  .seal::before{content:""; position:absolute; inset:7px; border-radius:50%; border:1px dashed rgba(192,151,74,.5)}
+  .seal span{font-family:"Fraunces",serif; font-weight:900; font-size:26px; color:var(--brass)}
+  .eyebrow{font-family:"Space Mono",monospace; letter-spacing:.32em; text-transform:uppercase; font-size:11px; color:var(--brass); margin:0 0 8px}
+  h1{font-family:"Fraunces",serif; font-weight:900; font-optical-sizing:auto; font-size:clamp(30px,7vw,46px); line-height:1.02; margin:0 0 10px; color:var(--parchment)}
+  .sub{max-width:48ch; margin:0 auto; color:#b9c2d4; font-size:15px}
+  nav{display:flex; gap:4px; margin:24px auto 0; padding:5px; max-width:440px;
+    background:var(--navy-2); border:1px solid var(--navy-line); border-radius:999px}
+  nav button{flex:1; border:0; cursor:pointer; padding:10px 6px; border-radius:999px; font-family:"Public Sans"; font-weight:600; font-size:13.5px; color:#aeb9cd; background:transparent; transition:.18s; display:flex; align-items:center; justify-content:center; gap:6px}
+  nav button[aria-selected="true"]{background:var(--brass); color:#21180a}
+  .badge{font-family:"Space Mono"; font-size:12px; min-width:22px; padding:1px 6px; border-radius:999px; background:rgba(0,0,0,.18); color:inherit}
+  nav button[aria-selected="false"] .badge{background:rgba(255,255,255,.07)}
+  .card{margin-top:24px; background:var(--parchment); color:var(--ink); border-radius:14px; box-shadow:var(--shadow); overflow:hidden; position:relative; border:1px solid var(--line)}
+  .card::before{content:""; position:absolute; top:0; left:0; right:0; height:5px; background:repeating-linear-gradient(90deg,var(--brass) 0 14px, transparent 14px 28px)}
+  .card-body{padding:30px 26px 28px}
+  .panel-title{font-family:"Fraunces",serif; font-weight:600; font-size:21px; margin:0 0 4px; color:var(--ink)}
+  .panel-note{color:var(--ink-soft); font-size:14px; margin:0 0 22px}
+  .field{margin-bottom:18px}
+  .field > label{display:block; font-weight:600; font-size:13px; margin-bottom:7px; color:var(--ink)}
+  .field .hint{font-weight:400; color:var(--ink-soft)}
+  input[type=text], input[type=password], textarea, select.std{width:100%; font-family:inherit; font-size:15px; color:var(--ink); background:#fbf8f0; border:1px solid var(--line); border-radius:9px; padding:11px 13px; transition:.15s}
+  select.std{appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2354607a' stroke-width='1.6' fill='none'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:34px}
+  input:focus, textarea:focus, select.std:focus{outline:none; border-color:var(--brass); box-shadow:0 0 0 3px rgba(192,151,74,.22); background:#fff}
+  textarea{resize:vertical; min-height:96px}
+  .country-card{display:flex; align-items:center; gap:13px; padding:14px 16px; border-radius:10px; background:linear-gradient(180deg,#fbf8f0,#f1e9d7); border:1px solid var(--line)}
+  .country-card .seat{font-family:"Space Mono"; font-weight:700; font-size:12px; color:var(--brass-deep); border:1px solid var(--line); border-radius:6px; padding:6px 9px; background:#fff; white-space:nowrap}
+  .country-card .cn{font-family:"Fraunces"; font-weight:600; font-size:20px; color:var(--ink); line-height:1.1}
+  .country-card .cl{font-size:12px; color:var(--ink-soft)}
+  .country-card.empty .cn{color:var(--ink-soft); font-weight:500; font-family:"Public Sans"; font-size:15px}
+  .options{display:grid; gap:9px}
+  .opt{display:flex; gap:12px; align-items:flex-start; padding:12px 14px; cursor:pointer; border:1px solid var(--line); border-radius:10px; background:#fbf8f0; transition:.15s}
+  .opt:hover{border-color:#c6b896; background:#fff}
+  .opt input{margin-top:2px; accent-color:var(--brass); width:16px; height:16px}
+  .opt .ot{font-weight:600; font-size:14px; display:flex; align-items:center; gap:8px; color:var(--ink)}
+  .dot{width:10px; height:10px; border-radius:3px; flex:none}
+  .opt:has(input:checked){border-color:var(--ink); box-shadow:0 0 0 1px var(--ink)}
+  .d-yes{background:var(--yes)} .d-no{background:var(--no)} .d-cond{background:var(--cond)} .d-obs{background:var(--obs)} .d-oppose{background:var(--oppose)}
+  #opposeWrap{display:none; margin-top:11px} #opposeWrap.show{display:block}
+  .err{color:var(--no); font-size:13px; font-weight:600; margin:6px 0 0; min-height:18px}
+  .submit{width:100%; margin-top:6px; border:0; cursor:pointer; padding:14px; background:var(--ink); color:var(--parchment); border-radius:10px; font-family:"Public Sans"; font-weight:700; font-size:15px; transition:.18s}
+  .submit:hover{background:#0c1322}
+  .submit:disabled{opacity:.55; cursor:default}
+  .done{text-align:center; padding:14px 0 2px}
+  .done .check{width:54px; height:54px; border-radius:50%; margin:0 auto 12px; display:grid; place-items:center; background:var(--yes); color:#fff; font-size:26px}
+
+  /* Leaderboard */
+  .legend{display:flex; flex-wrap:wrap; gap:12px; margin:2px 0 20px}
+  .legend span{display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink-soft); font-weight:600}
+  .lb{display:grid; gap:14px}
+  .rank{display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:start; padding:16px 18px; border:1px solid var(--line); border-radius:12px; background:#fbf8f0}
+  .rank.top{background:linear-gradient(180deg,#fff,#f6efdd)}
+  .medal{width:46px; height:46px; border-radius:11px; display:grid; place-items:center; font-family:"Space Mono"; font-weight:700; font-size:18px; color:#fff; line-height:1}
+  .bonus{font-family:"Space Mono"; font-size:10px; font-weight:700; margin-top:4px; text-align:center; color:var(--brass-deep)}
+  .rank h3{font-family:"Fraunces"; font-weight:600; font-size:18px; margin:0; color:var(--ink); line-height:1.15}
+  .rank .meta{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-top:3px}
+  .score{font-family:"Space Mono"; font-weight:700; font-size:14px; color:var(--ink)}
+  .breakdown{font-size:12.5px; color:var(--ink-soft)}
+  .chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:11px}
+  .chip{font-size:12px; font-weight:600; padding:4px 9px; border-radius:999px; display:flex; align-items:center; gap:6px; border:1px solid transparent}
+  .chip .cd{width:7px; height:7px; border-radius:50%}
+  .c-yes{background:#dcefe2; color:#205c3b; border-color:#bfe0cd}
+  .c-no{background:#f3dada; color:#7e2626; border-color:#e8c2c2}
+  .c-cond{background:#f6e8c9; color:#80591a; border-color:#ead4a3}
+  .c-obs{background:#d9e6f2; color:#28507a; border-color:#bcd2e8}
+  .c-oppose{background:#e6dff2; color:#463a66; border-color:#cfc2e6}
+
+  .placards{display:grid; gap:11px; margin-top:18px}
+  .placard{background:var(--parchment); color:var(--ink); border-radius:11px; overflow:hidden; border:1px solid var(--line); display:grid; grid-template-columns:6px 1fr}
+  .placard .pc{padding:13px 16px}
+  .placard .top{display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap}
+  .country{font-family:"Fraunces"; font-weight:600; font-size:18px; color:var(--ink)}
+  .delegate{font-size:12.5px; color:var(--ink-soft); font-family:"Space Mono"}
+  .stamp{font-family:"Space Mono"; font-weight:700; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; padding:4px 9px; border-radius:6px; color:#fff; white-space:nowrap}
+  .org{font-size:12px; color:var(--brass-deep); font-weight:600; margin-top:3px}
+  .reason{font-size:14px; margin-top:9px; color:#33405a}
+  .reason .op{color:var(--no); font-weight:600}
+  .results-head{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-top:6px}
+  .results-head h2{font-family:"Fraunces"; font-weight:600; font-size:18px; margin:0; color:var(--ink)}
+  .ctrls{display:flex; gap:8px; flex-wrap:wrap}
+  select.ui, .ghost{font-family:"Public Sans"; font-size:13px; font-weight:600; cursor:pointer; background:#fff; color:var(--ink); border:1px solid var(--line); border-radius:8px; padding:8px 12px; transition:.15s}
+  .ghost:hover{border-color:var(--brass)}
+  .ghost.danger:hover{border-color:var(--no); color:var(--no)}
+  .empty{text-align:center; color:var(--ink-soft); padding:40px 20px; border:1px dashed var(--line); border-radius:12px; margin-top:6px}
+  .loading{text-align:center; color:var(--ink-soft); padding:30px; font-family:"Space Mono"; font-size:13px}
+  .total-line{font-family:"Space Mono"; font-size:12px; color:var(--ink-soft); margin-top:14px; text-align:center}
+  .lock-note{font-size:12.5px; color:var(--ink-soft); margin-top:14px; text-align:center}
+  footer{text-align:center; color:#6f7d96; font-size:12px; margin-top:34px; line-height:1.6}
+  .toast{position:fixed; left:50%; bottom:22px; transform:translateX(-50%) translateY(20px); background:var(--ink); color:var(--parchment); padding:11px 18px; border-radius:10px; font-size:14px; font-weight:600; opacity:0; pointer-events:none; transition:.25s; box-shadow:var(--shadow); z-index:9}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+  .hidden{display:none !important}
+  @media(prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="seal"><span>IO</span></div>
+    <p class="eyebrow">POL 4418 · International Organizations</p>
+    <h1>General Assembly Vote</h1>
+    <p class="sub">Cast your vote on behalf of your assigned country, then watch the standings as each organization is judged.</p>
+  </header>
+
+  <nav role="tablist">
+    <button id="tabVote" role="tab" aria-selected="true" onclick="show('vote')">Cast Vote</button>
+    <button id="tabBoard" role="tab" aria-selected="false" onclick="show('board')">Leaderboard <span class="badge" id="navCount">0</span></button>
+    <button id="tabInstr" role="tab" aria-selected="false" onclick="show('instr')">&#128274; Instructor</button>
+  </nav>
+
+  <!-- CAST VOTE -->
+  <section id="voteView" class="card">
+    <div class="card-body">
+      <div id="formWrap">
+        <h2 class="panel-title">Ballot</h2>
+        <p class="panel-note">Each delegate votes once per organization. All fields are required.</p>
+        <div class="field">
+          <label for="student">Delegate</label>
+          <select id="student" class="std" onchange="onStudent()"><option value="">Select your name…</option></select>
+        </div>
+        <div class="field">
+          <label>Country represented</label>
+          <div class="country-card empty" id="countryCard"><div class="cn">Select your name to load your assigned country</div></div>
+        </div>
+        <div class="field">
+          <label for="org">Organization being voted on <span class="hint">(the presenting group's organization)</span></label>
+          <input type="text" id="org" autocomplete="off" placeholder="e.g. Global Climate Security Council">
+        </div>
+        <div class="field">
+          <label>Your vote</label>
+          <div class="options" id="options">
+            <label class="opt"><input type="radio" name="vote" value="yes"><span class="ot"><span class="dot d-yes"></span>Yes, my country would join.</span></label>
+            <label class="opt"><input type="radio" name="vote" value="no"><span class="ot"><span class="dot d-no"></span>No, my country would not join.</span></label>
+            <label class="opt"><input type="radio" name="vote" value="cond"><span class="ot"><span class="dot d-cond"></span>My country would join only if changes are made.</span></label>
+            <label class="opt"><input type="radio" name="vote" value="obs"><span class="ot"><span class="dot d-obs"></span>My country would support it as an observer.</span></label>
+            <label class="opt"><input type="radio" name="vote" value="oppose"><span class="ot"><span class="dot d-oppose"></span>My country opposes a specific country's membership.</span></label>
+          </div>
+          <div id="opposeWrap" class="field">
+            <label for="opposeCountry" style="margin-top:11px">Which country's membership do you oppose?</label>
+            <input type="text" id="opposeCountry" autocomplete="off" placeholder="e.g. Country X">
+          </div>
+        </div>
+        <div class="field">
+          <label for="reason">Reason <span class="hint">(your country's interests — kept private; only the instructor sees it)</span></label>
+          <textarea id="reason" placeholder="My country would… because…"></textarea>
+        </div>
+        <p class="err" id="err"></p>
+        <button class="submit" id="submitBtn" onclick="submitVote()">Submit Vote</button>
+      </div>
+      <div id="doneWrap" class="done hidden">
+        <div class="check">&#10003;</div>
+        <h2 class="panel-title">Vote recorded</h2>
+        <p class="panel-note" id="doneMsg"></p>
+        <button class="ghost" onclick="resetForm()">Add another vote</button>
+        <button class="ghost" style="margin-left:8px;background:var(--brass);color:#21180a;border:0" onclick="show('board')">See standings</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEADERBOARD -->
+  <section id="boardView" class="card hidden">
+    <div class="card-body">
+      <h2 class="panel-title">Standings</h2>
+      <p class="panel-note">Organizations ranked by the countries they won over. Score = Join&times;3 + Conditional&times;2 + Observer&times;1.</p>
+      <div class="legend">
+        <span><span class="dot d-yes"></span>Join</span>
+        <span><span class="dot d-cond"></span>Conditional</span>
+        <span><span class="dot d-obs"></span>Observer</span>
+        <span><span class="dot d-no"></span>Decline</span>
+        <span><span class="dot d-oppose"></span>Opposes a member</span>
+      </div>
+      <div id="lbArea"></div>
+    </div>
+  </section>
+
+  <!-- INSTRUCTOR -->
+  <section id="instrView" class="card hidden">
+    <div class="card-body">
+      <div id="lockWrap">
+        <h2 class="panel-title">Instructor access</h2>
+        <p class="panel-note">Enter the access code to view delegates' written reasons, download the record, or reset.</p>
+        <div class="field">
+          <label for="pin">Access code</label>
+          <input type="password" id="pin" autocomplete="off" placeholder="••••" onkeydown="if(event.key==='Enter')unlock()">
+        </div>
+        <p class="err" id="pinErr"></p>
+        <button class="submit" onclick="unlock()">Unlock</button>
+        <p class="lock-note">Light classroom gate — keeps reasons out of the student view, not bank-grade security.</p>
+      </div>
+      <div id="instrPanel" class="hidden">
+        <div class="results-head">
+          <h2>Vote Record &middot; with reasons</h2>
+          <div class="ctrls">
+            <select id="orgFilter" class="ui" onchange="renderList()"><option value="">All organizations</option></select>
+            <button class="ghost" onclick="exportCSV()">Download CSV</button>
+            <button class="ghost danger" onclick="resetAll()">Reset</button>
+          </div>
+        </div>
+        <div id="listArea"></div>
+        <p class="total-line" id="totalLine"></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Standings are shared with everyone who opens this page. Written reasons are visible to the instructor only.<br>
+    POL 4418 · Designing a New International Organization · Membership Simulation
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+
+<!-- Firebase online storage. Replace the values below with your Firebase web app config. -->
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script>
+  // 1) Go to Firebase Console > Project settings > Your apps > Web app.
+  // 2) Copy your firebaseConfig object and paste the values here.
+  const FIREBASE_CONFIG = {
+    apiKey: "PASTE_YOUR_API_KEY_HERE",
+    authDomain: "PASTE_YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "PASTE_YOUR_PROJECT_ID",
+    storageBucket: "PASTE_YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID",
+    appId: "PASTE_YOUR_APP_ID"
+  };
+
+  const FIREBASE_COLLECTION = "pol4418_general_assembly_votes";
+
+  function firebaseConfigured(){
+    return FIREBASE_CONFIG.apiKey && !FIREBASE_CONFIG.apiKey.includes("PASTE_") && FIREBASE_CONFIG.projectId && !FIREBASE_CONFIG.projectId.includes("PASTE_");
+  }
+
+  if(firebaseConfigured()){
+    firebase.initializeApp(FIREBASE_CONFIG);
+    const db = firebase.firestore();
+    const docId = key => encodeURIComponent(key);
+
+    window.storage = {
+      async set(key, value){
+        await db.collection(FIREBASE_COLLECTION).doc(docId(key)).set({
+          key,
+          value,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        return true;
+      },
+      async get(key){
+        const snap = await db.collection(FIREBASE_COLLECTION).doc(docId(key)).get();
+        if(!snap.exists) return null;
+        const data = snap.data() || {};
+        return {key: data.key || key, value: data.value};
+      },
+      async list(prefix){
+        const snap = await db.collection(FIREBASE_COLLECTION).get();
+        const keys = [];
+        snap.forEach(doc => {
+          const data = doc.data() || {};
+          const key = data.key || decodeURIComponent(doc.id);
+          if(!prefix || key.startsWith(prefix)) keys.push(key);
+        });
+        return {keys};
+      },
+      async delete(key){
+        await db.collection(FIREBASE_COLLECTION).doc(docId(key)).delete();
+        return true;
+      }
+    };
+  } else {
+    window.storage = {
+      async set(){ throw new Error("Firebase is not configured yet. Paste your Firebase config into FIREBASE_CONFIG."); },
+      async get(){ return null; },
+      async list(){ return {keys:[]}; },
+      async delete(){ return true; }
+    };
+    console.warn("Firebase is not configured yet. Paste your Firebase config into FIREBASE_CONFIG.");
+  }
+</script>
+
+<script>
+const ROSTER = [{"no": 1, "name": "MUKHLISA BOBOJONOVA", "country": "Tunisia"}, {"no": 2, "name": "İNCİ SARTEKİN", "country": "Kazakhstan"}, {"no": 3, "name": "ONUR CAN KUMRU", "country": "Georgia"}, {"no": 4, "name": "SALMA AHRAM", "country": "Croatia"}, {"no": 5, "name": "ÖZHAN SARP ATAÇ", "country": "Russia"}, {"no": 6, "name": "BARAN TIREN", "country": "Canada"}, {"no": 7, "name": "MELİHCAN TOSUN", "country": "Brazil"}, {"no": 8, "name": "ÇAĞAN BERK ÖZGÜNHAN", "country": "Ireland"}, {"no": 9, "name": "SİNAN BUĞRA EMİROGLU", "country": "United Kingdom"}, {"no": 10, "name": "ALTUĞ PARLAKCI", "country": "Saudi Arabia"}, {"no": 11, "name": "ELANUR SARIBAY", "country": "South Africa"}, {"no": 12, "name": "ŞARA KÜÇÜKKÖPRÜLÜ", "country": "Czechia"}, {"no": 13, "name": "ALİ AKIN ŞENSÖZ", "country": "Sweden"}, {"no": 14, "name": "HAYAT SUNĞAR", "country": "Ethiopia"}, {"no": 15, "name": "ARMAN YAVAŞ", "country": "China"}, {"no": 16, "name": "HALİT ZİYA KAYALI", "country": "Poland"}, {"no": 17, "name": "YİĞİT ALİ HAYAT", "country": "New Zealand"}, {"no": 18, "name": "ALARA DERYA KURTOĞLU", "country": "Israel"}, {"no": 19, "name": "FARAH HAYDER HUSSEIN ALAWADI", "country": "Hungary"}, {"no": 20, "name": "SUDE NAZ AY", "country": "Pakistan"}, {"no": 21, "name": "ATILAY NAİL ARPACI", "country": "Vietnam"}, {"no": 22, "name": "ÖMER DİNÇER", "country": "Serbia"}, {"no": 23, "name": "LAMAR SHAABAN", "country": "Netherlands"}, {"no": 24, "name": "AYŞENAZ TUĞBA BAYRAKTAR", "country": "South Korea"}, {"no": 25, "name": "UMAY TUĞÇE TÜRK", "country": "Japan"}, {"no": 26, "name": "SELİN NUR NARLI", "country": "Mexico"}, {"no": 27, "name": "İLKE ILGIN", "country": "Finland"}, {"no": 28, "name": "YUSUFCAN YİRDEM", "country": "Switzerland"}, {"no": 29, "name": "İREM BAHAR", "country": "Nigeria"}, {"no": 30, "name": "TERESA JİSEL USTABAŞI", "country": "Qatar"}, {"no": 31, "name": "MOHAMAD BILAL ALNAYEF", "country": "Kenya"}, {"no": 32, "name": "ADEN ALEYNA ÖZGÜLER", "country": "Austria"}, {"no": 33, "name": "GONCA ÖZER", "country": "Italy"}, {"no": 34, "name": "MISRA ÇAKIRKA", "country": "France"}, {"no": 35, "name": "BUSE ÇOLAK", "country": "Thailand"}, {"no": 36, "name": "BERRA ARSLANKAYA", "country": "Egypt"}, {"no": 37, "name": "BAŞAK BAŞDOĞAN", "country": "Belgium"}, {"no": 38, "name": "SENA NUR YAŞAR", "country": "Norway"}, {"no": 39, "name": "MOHAMMAD OMAR BARAKI", "country": "Colombia"}, {"no": 40, "name": "REHAM ALHOTHAIFY", "country": "Romania"}, {"no": 41, "name": "MEHMET TAHA ZİLELİ", "country": "United Arab Emirates"}, {"no": 42, "name": "GISMAT NABIYEV", "country": "Malaysia"}, {"no": 43, "name": "İLKER ALKIN TERZİ", "country": "Spain"}, {"no": 44, "name": "SAMIRA AHMADOU GOUROUDJA", "country": "Chile"}, {"no": 45, "name": "ALAA ADEL HASAN ALASHHAB", "country": "Singapore"}, {"no": 46, "name": "HELİN MENGÜTAY", "country": "Australia"}, {"no": 47, "name": "YİĞİTHAN GÖKKAYA", "country": "Morocco"}, {"no": 48, "name": "KAMALADDIN HUSEYNZADA", "country": "Azerbaijan"}, {"no": 49, "name": "HALA HAMED", "country": "United States"}, {"no": 50, "name": "LAILA ALI", "country": "Bulgaria"}, {"no": 51, "name": "ELSHAN MURADOV", "country": "Ukraine"}, {"no": 52, "name": "FİRUZE MANAŞ", "country": "Argentina"}, {"no": 53, "name": "OSMAN BERK SELVİ", "country": "Philippines"}, {"no": 54, "name": "EREN ERTOP", "country": "Iran"}, {"no": 55, "name": "ALTUN ABDULLAZADA", "country": "Germany"}, {"no": 56, "name": "ASMAR ASGARLI", "country": "Greece"}, {"no": 57, "name": "NUR SENA DEMİRCİ", "country": "Venezuela"}, {"no": 58, "name": "KAIL LAWRENCE DAVEY", "country": "Indonesia"}, {"no": 59, "name": "ABBAS EKEN", "country": "Uzbekistan"}, {"no": 60, "name": "JAVOKHIR KARIMOV", "country": "Bangladesh"}, {"no": 61, "name": "SARYA TARIG BUSHRA FARAH", "country": "Türkiye"}, {"no": 62, "name": "ILYAS AKSENOV", "country": "India"}, {"no": 63, "name": "ELİF ENGİN", "country": "Algeria"}, {"no": 64, "name": "TELLI MAMMADLI", "country": "Armenia"}, {"no": 65, "name": "NOUR BOUCHKOUCH", "country": "Albania"}];
+const INSTRUCTOR_PIN = "4418"; // change to whatever you like
+const VOTE_META = {
+  yes:{label:"Would join",short:"JOIN",color:"var(--yes)",chip:"c-yes"},
+  no:{label:"Would not join",short:"DECLINE",color:"var(--no)",chip:"c-no"},
+  cond:{label:"Conditional",short:"CONDITIONAL",color:"var(--cond)",chip:"c-cond"},
+  obs:{label:"Observer",short:"OBSERVER",color:"var(--obs)",chip:"c-obs"},
+  oppose:{label:"Opposes a member",short:"OPPOSE",color:"var(--oppose)",chip:"c-oppose"},
+};
+const SCORE = {yes:3,cond:2,obs:1,no:0,oppose:0};
+const BONUS = ["+10","+7","+5"];
+const MEDAL_BG = ["var(--gold)","var(--silver)","var(--bronze)"];
+let CACHE=[], VIEW="vote", UNLOCKED=false;
+
+(function(){const sel=document.getElementById('student');
+  ROSTER.slice().sort((a,b)=>a.name.localeCompare(b.name)).forEach(s=>{
+    const o=document.createElement('option'); o.value=String(s.no); o.textContent=s.name+' — '+s.country; sel.appendChild(o);});})();
+
+function currentStudent(){const no=document.getElementById('student').value; return ROSTER.find(s=>String(s.no)===no)||null;}
+function onStudent(){const s=currentStudent(), card=document.getElementById('countryCard');
+  if(!s){card.className='country-card empty'; card.innerHTML='<div class="cn">Select your name to load your assigned country</div>'; return;}
+  card.className='country-card';
+  card.innerHTML='<div class="seat">SEAT '+String(s.no).padStart(2,'0')+'</div><div><div class="cn">'+esc(s.country)+'</div><div class="cl">Delegation of '+esc(s.country)+'</div></div>';}
+
+function toast(m){const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2200);}
+function show(v){VIEW=v;
+  document.getElementById('voteView').classList.toggle('hidden',v!=='vote');
+  document.getElementById('boardView').classList.toggle('hidden',v!=='board');
+  document.getElementById('instrView').classList.toggle('hidden',v!=='instr');
+  document.getElementById('tabVote').setAttribute('aria-selected',v==='vote');
+  document.getElementById('tabBoard').setAttribute('aria-selected',v==='board');
+  document.getElementById('tabInstr').setAttribute('aria-selected',v==='instr');
+  if(v==='board'||v==='instr') loadVotes();}
+document.getElementById('options').addEventListener('change',()=>{
+  const o=document.querySelector('input[name=vote]:checked')?.value==='oppose';
+  document.getElementById('opposeWrap').classList.toggle('show',o);});
+function val(id){return document.getElementById(id).value.trim();}
+
+async function submitVote(){
+  const err=document.getElementById('err'); err.textContent='';
+  const s=currentStudent(), org=val('org'), vote=document.querySelector('input[name=vote]:checked')?.value, reason=val('reason'), opp=val('opposeCountry');
+  if(!s){err.textContent='Please select your name.'; return;}
+  if(!org){err.textContent='Please enter the organization being voted on.'; return;}
+  if(!vote){err.textContent='Please choose a vote option.'; return;}
+  if(vote==='oppose'&&!opp){err.textContent='Name the country whose membership you oppose.'; return;}
+  if(!reason){err.textContent='Please write a short reason.'; return;}
+  const btn=document.getElementById('submitBtn'); btn.disabled=true; btn.textContent='Saving…';
+  const id=Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+  const rec={id,seat:s.no,delegate:s.name,country:s.country,org,vote,reason,opposeCountry:opp,ts:Date.now()};
+  try{const r=await window.storage.set('vote:'+id,JSON.stringify(rec),true); if(!r)throw 0;
+    document.getElementById('formWrap').classList.add('hidden');
+    document.getElementById('doneWrap').classList.remove('hidden');
+    document.getElementById('doneMsg').textContent=s.country+' has voted: "'+VOTE_META[vote].label+'".';
+  }catch(e){err.textContent='Could not save, please try again.';}
+  finally{btn.disabled=false; btn.textContent='Submit Vote';}}
+function resetForm(){document.getElementById('student').value=''; onStudent();
+  ['org','reason','opposeCountry'].forEach(id=>document.getElementById(id).value='');
+  document.querySelectorAll('input[name=vote]').forEach(r=>r.checked=false);
+  document.getElementById('opposeWrap').classList.remove('show'); document.getElementById('err').textContent='';
+  document.getElementById('doneWrap').classList.add('hidden'); document.getElementById('formWrap').classList.remove('hidden');}
+
+async function loadVotes(){
+  const target=VIEW==='board'?'lbArea':'listArea';
+  document.getElementById(target).innerHTML='<div class="loading">Loading…</div>';
+  try{const listed=await window.storage.list('vote:',true); const keys=(listed&&listed.keys)||[];
+    const items=await Promise.all(keys.map(async k=>{try{const r=await window.storage.get(k,true); return r?JSON.parse(r.value):null;}catch{return null;}}));
+    CACHE=items.filter(Boolean).sort((a,b)=>b.ts-a.ts);
+  }catch(e){CACHE=[];}
+  document.getElementById('navCount').textContent=new Set(CACHE.map(v=>v.org)).size;
+  if(VIEW==='board') renderLeaderboard();
+  else if(UNLOCKED){renderOrgFilter(); renderList();}}
+
+function orgAgg(){
+  const m={};
+  CACHE.forEach(v=>{(m[v.org]||(m[v.org]={org:v.org,votes:[],c:{yes:0,no:0,cond:0,obs:0,oppose:0},score:0})); const o=m[v.org]; o.votes.push(v); if(o.c[v.vote]!=null)o.c[v.vote]++; o.score+=SCORE[v.vote]||0;});
+  return Object.values(m).sort((a,b)=>b.score-a.score||b.c.yes-a.c.yes||a.org.localeCompare(b.org));}
+
+function renderLeaderboard(){
+  const arr=orgAgg(), area=document.getElementById('lbArea');
+  if(!arr.length){area.innerHTML='<div class="empty">No votes yet. Standings appear here as delegates vote.</div>'; return;}
+  area.innerHTML='<div class="lb">'+arr.map((o,i)=>{
+    const top=i<3, mbg=top?MEDAL_BG[i]:'#cdbf9f', bonus=top?'<div class="bonus">'+BONUS[i]+' pts</div>':'';
+    const parts=[]; ['yes','cond','obs','no','oppose'].forEach(k=>{if(o.c[k])parts.push(o.c[k]+' '+VOTE_META[k].label.toLowerCase().replace('would ','').replace('opposes a member','oppose'));});
+    const chips=o.votes.slice().sort((a,b)=>(SCORE[b.vote]||0)-(SCORE[a.vote]||0)).map(v=>{const m=VOTE_META[v.vote];
+      return '<span class="chip '+m.chip+'"><span class="cd" style="background:'+m.color+'"></span>'+esc(v.country)+'</span>';}).join('');
+    return '<div class="rank '+(top?'top':'')+'"><div style="text-align:center"><div class="medal" style="background:'+mbg+'">'+(i+1)+'</div>'+bonus+'</div>'+
+      '<div><h3>'+esc(o.org)+'</h3><div class="meta"><span class="score">Score '+o.score+'</span><span class="breakdown">'+(parts.join(' · ')||'no votes')+'</span></div>'+
+      '<div class="chips">'+chips+'</div></div></div>';
+  }).join('')+'</div>';}
+
+function unlock(){const e=document.getElementById('pinErr'); e.textContent='';
+  if(val('pin')===INSTRUCTOR_PIN){UNLOCKED=true; document.getElementById('lockWrap').classList.add('hidden'); document.getElementById('instrPanel').classList.remove('hidden'); loadVotes();}
+  else{e.textContent='Incorrect code.';}}
+function renderOrgFilter(){const sel=document.getElementById('orgFilter'), cur=sel.value;
+  const orgs=[...new Set(CACHE.map(v=>v.org))].sort((a,b)=>a.localeCompare(b));
+  sel.innerHTML='<option value="">All organizations</option>'+orgs.map(o=>'<option '+(o===cur?'selected':'')+'>'+esc(o)+'</option>').join('');}
+function renderList(){const filter=document.getElementById('orgFilter').value, rows=filter?CACHE.filter(v=>v.org===filter):CACHE;
+  document.getElementById('totalLine').textContent=CACHE.length?(CACHE.length+' votes · '+new Set(CACHE.map(v=>v.org)).size+' organizations'):'';
+  const area=document.getElementById('listArea');
+  if(!rows.length){area.innerHTML='<div class="empty">No votes yet.</div>'; return;}
+  area.innerHTML='<div class="placards">'+rows.map(v=>{const m=VOTE_META[v.vote]||{short:'?',color:'#888'};
+    const opp=v.vote==='oppose'&&v.opposeCountry?'<span class="op">Opposes: '+esc(v.opposeCountry)+'.</span> ':'';
+    return '<div class="placard"><div style="background:'+m.color+'"></div><div class="pc"><div class="top"><div><div class="country">'+esc(v.country)+'</div><div class="delegate">'+esc(v.delegate)+'</div></div><span class="stamp" style="background:'+m.color+'">'+m.short+'</span></div><div class="org">&#9656; '+esc(v.org)+'</div><div class="reason">'+opp+esc(v.reason)+'</div></div></div>';}).join('')+'</div>';}
+function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function exportCSV(){if(!CACHE.length){toast('No votes to export'); return;}
+  const head=['Seat','Country','Delegate','Organization','Vote','Opposed country','Reason','Time'], q=s=>'"'+String(s==null?'':s).replace(/"/g,'""')+'"', lines=[head.map(q).join(',')];
+  CACHE.forEach(v=>lines.push([v.seat,v.country,v.delegate,v.org,(VOTE_META[v.vote]||{}).label,v.opposeCountry,v.reason,new Date(v.ts).toLocaleString('en-GB')].map(q).join(',')));
+  const b=new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv;charset=utf-8'}), a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='pol4418-votes.csv'; a.click(); URL.revokeObjectURL(a.href);}
+async function resetAll(){if(!CACHE.length){toast('No votes to delete'); return;}
+  if(!confirm('All '+CACHE.length+' votes will be permanently deleted. Continue?')) return;
+  try{const listed=await window.storage.list('vote:',true); await Promise.all(((listed&&listed.keys)||[]).map(k=>window.storage.delete(k,true))); toast('All votes deleted'); loadVotes();}catch(e){toast('Delete failed');}}
+</script>
